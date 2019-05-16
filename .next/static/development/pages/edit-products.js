@@ -60500,8 +60500,11 @@ function (_React$Component) {
       price: '',
       variantId: '',
       sliderRate: 4.5,
-      sliderPeriod: 4,
-      sliderFrequency: 2,
+      sliderPeriod: 4.0,
+      sliderFrequency: 2.0,
+      ordinaryAnnuity: '',
+      annualPayment: '',
+      futureValue: '',
       showToast: false
     });
 
@@ -60512,41 +60515,50 @@ function (_React$Component) {
     });
 
     Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "handleSliderRateChange", function (sliderRate) {
-      _this.itemToBeConsumed();
-
       _this.setState({
         sliderRate: sliderRate
       });
+
+      _this.itemToBeConsumed();
     });
 
     Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "handleSliderPeriodChange", function (sliderPeriod) {
-      _this.itemToBeConsumed();
-
       _this.setState({
         sliderPeriod: sliderPeriod
       });
+
+      _this.itemToBeConsumed();
     });
 
     Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "handleSliderFrequencyChange", function (sliderFrequency) {
-      _this.itemToBeConsumed();
-
       _this.setState({
         sliderFrequency: sliderFrequency
       });
+
+      _this.itemToBeConsumed();
     });
 
     Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "itemToBeConsumed", function () {
       var item = store_js__WEBPACK_IMPORTED_MODULE_12___default.a.get('item');
       var price = item.variants.edges[0].node.price;
       var variantId = item.variants.edges[0].node.id;
-      var r = _this.state.sliderRate / _this.state.sliderFrequency / 100;
+      var r = _this.state.sliderRate / 100 / _this.state.sliderFrequency;
+      console.log(r);
       var n = _this.state.sliderFrequency * _this.state.sliderPeriod;
+      console.log(n);
       var ordinaryAnnuity = (r * price / (1 - Math.pow(1 + r, -n))).toFixed(2);
+      console.log(ordinaryAnnuity);
+
+      var annualPayment = (ordinaryAnnuity * _this.state.sliderFrequency).toFixed(2);
+
+      var futureValue = (annualPayment * _this.state.sliderPeriod).toFixed(2);
 
       _this.setState({
         price: price,
         variantId: variantId,
-        ordinaryAnnuity: ordinaryAnnuity
+        ordinaryAnnuity: ordinaryAnnuity,
+        annualPayment: annualPayment,
+        futureValue: futureValue
       });
     });
 
@@ -60556,9 +60568,7 @@ function (_React$Component) {
   Object(_babel_runtime_corejs2_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(EditProduct, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.setState({
-        discount: this.itemToBeConsumed()
-      });
+      this.itemToBeConsumed();
     }
   }, {
     key: "render",
@@ -60602,20 +60612,20 @@ function (_React$Component) {
           type: "price"
         }), react__WEBPACK_IMPORTED_MODULE_8___default.a.createElement(_shopify_polaris__WEBPACK_IMPORTED_MODULE_9__["TextField"], {
           prefix: "$",
-          value: (_this2.state.ordinaryAnnuity * _this2.state.sliderFrequency).toFixed(2),
-          onChange: _this2.handleChange('discount'),
+          value: _this2.state.annualPayment,
+          onChange: _this2.handleChange('payments'),
           label: "Annnual payments",
-          type: "discount"
+          type: "payments"
         }), react__WEBPACK_IMPORTED_MODULE_8___default.a.createElement(_shopify_polaris__WEBPACK_IMPORTED_MODULE_9__["TextField"], {
           prefix: "$",
-          value: (_this2.state.ordinaryAnnuity * _this2.state.sliderPeriod * _this2.state.sliderFrequency).toFixed(2),
-          onChange: _this2.handleChange('discount'),
+          value: _this2.state.futureValue,
+          onChange: _this2.handleChange('total'),
           label: "Total amount to be payed",
-          type: "discount"
+          type: "total"
         })), react__WEBPACK_IMPORTED_MODULE_8___default.a.createElement(_shopify_polaris__WEBPACK_IMPORTED_MODULE_9__["RangeSlider"], {
           label: "Interest rate",
-          min: 0.1,
-          max: 10,
+          min: 1.0,
+          max: 10.0,
           step: 0.1,
           value: _this2.state.sliderRate,
           onChange: _this2.handleSliderRateChange,
@@ -60624,8 +60634,8 @@ function (_React$Component) {
           }, _this2.state.sliderRate, "%")
         }), react__WEBPACK_IMPORTED_MODULE_8___default.a.createElement(_shopify_polaris__WEBPACK_IMPORTED_MODULE_9__["RangeSlider"], {
           label: "Payback period",
-          min: 1,
-          max: 10,
+          min: 1.0,
+          max: 10.0,
           step: 1,
           value: _this2.state.sliderPeriod,
           onChange: _this2.handleSliderPeriodChange,
@@ -60634,9 +60644,9 @@ function (_React$Component) {
           }, _this2.state.sliderPeriod, "  years")
         }), react__WEBPACK_IMPORTED_MODULE_8___default.a.createElement(_shopify_polaris__WEBPACK_IMPORTED_MODULE_9__["RangeSlider"], {
           label: "Payment frequency",
-          min: 1,
-          max: 12,
-          step: 1,
+          min: 1.0,
+          max: 12.0,
+          step: 1.0,
           value: _this2.state.sliderFrequency,
           onChange: _this2.handleSliderFrequencyChange,
           suffix: react__WEBPACK_IMPORTED_MODULE_8___default.a.createElement("p", {
@@ -60672,7 +60682,7 @@ function (_React$Component) {
 
 /***/ }),
 
-/***/ 3:
+/***/ 2:
 /*!*******************************************************************************************************************************************!*\
   !*** multi next-client-pages-loader?page=%2Fedit-products&absolutePagePath=%2FUsers%2Fjay%2FDesktop%2Flit-app%2Fpages%2Fedit-products.js ***!
   \*******************************************************************************************************************************************/
@@ -60695,5 +60705,5 @@ module.exports = dll_6dc2816e14fab51b8269;
 
 /***/ })
 
-},[[3,"static/runtime/webpack.js"]]]);
+},[[2,"static/runtime/webpack.js"]]]);
 //# sourceMappingURL=edit-products.js.map

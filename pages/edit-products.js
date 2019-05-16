@@ -40,13 +40,16 @@ import {
       price: '',
       variantId: '',
       sliderRate: 4.5,
-      sliderPeriod: 4,
-      sliderFrequency: 2,
+      sliderPeriod: 4.0,
+      sliderFrequency: 2.0,
+      ordinaryAnnuity: '',
+      annualPayment: '',
+      futureValue:'',
       showToast: false,
     };
   
     componentDidMount() {
-      this.setState({ discount: this.itemToBeConsumed() });
+      this.itemToBeConsumed();
     }
   
     render() {
@@ -94,23 +97,23 @@ import {
                             />
                             <TextField
                               prefix="$"
-                              value={(this.state.ordinaryAnnuity*this.state.sliderFrequency).toFixed(2)}
-                              onChange={this.handleChange('discount')}
+                              value={this.state.annualPayment}
+                              onChange={this.handleChange('payments')}
                               label="Annnual payments"
-                              type="discount"
+                              type="payments"
                             />
                             <TextField
                               prefix="$"
-                              value={(this.state.ordinaryAnnuity*this.state.sliderPeriod*this.state.sliderFrequency).toFixed(2)}
-                              onChange={this.handleChange('discount')}
+                              value={this.state.futureValue}
+                              onChange={this.handleChange('total')}
                               label="Total amount to be payed"
-                              type="discount"
+                              type="total"
                             />
                           </FormLayout.Group>
                           <RangeSlider
                             label="Interest rate"
-                            min={0.1}
-                            max={10}
+                            min={1.0}
+                            max={10.0}
                             step={0.1}
                             value={this.state.sliderRate}
                             onChange={this.handleSliderRateChange}
@@ -118,8 +121,8 @@ import {
                           />
                           <RangeSlider
                             label="Payback period"
-                            min={1}
-                            max={10}
+                            min={1.0}
+                            max={10.0}
                             step={1}
                             value={this.state.sliderPeriod}
                             onChange={this.handleSliderPeriodChange}
@@ -127,9 +130,9 @@ import {
                           />
                           <RangeSlider
                             label="Payment frequency"
-                            min={1}
-                            max={12}
-                            step={1}
+                            min={1.0}
+                            max={12.0}
+                            step={1.0}
                             value={this.state.sliderFrequency}
                             onChange={this.handleSliderFrequencyChange}
                             suffix={<p style={suffixStyles}>{this.state.sliderFrequency}/year</p>}
@@ -172,29 +175,33 @@ import {
     };
 
     handleSliderRateChange = (sliderRate) => {
-        this.itemToBeConsumed();
         this.setState({sliderRate});
+        this.itemToBeConsumed();
     };
 
     handleSliderPeriodChange = (sliderPeriod) => {
-        this.itemToBeConsumed();
         this.setState({sliderPeriod});
+        this.itemToBeConsumed();
     };
 
     handleSliderFrequencyChange = (sliderFrequency) => {
-        this.itemToBeConsumed();
         this.setState({sliderFrequency});
+        this.itemToBeConsumed();
     };
   
     itemToBeConsumed = () => {
       const item = store.get('item');
       const price = item.variants.edges[0].node.price;
       const variantId = item.variants.edges[0].node.id;
-      const r = (this.state.sliderRate/this.state.sliderFrequency)/100;
+      const r = (this.state.sliderRate/100)/this.state.sliderFrequency;
+      console.log(r)
       const n = this.state.sliderFrequency*this.state.sliderPeriod;
+      console.log(n)
       const ordinaryAnnuity = ((r*price)/(1-(Math.pow(1 + r, -n)))).toFixed(2);
-      this.setState({ price, variantId, ordinaryAnnuity});
-  
+      console.log(ordinaryAnnuity)
+      const annualPayment = (ordinaryAnnuity*this.state.sliderFrequency).toFixed(2)
+      const futureValue = (annualPayment*this.state.sliderPeriod).toFixed(2)
+      this.setState({ price, variantId, ordinaryAnnuity, annualPayment, futureValue });
     };
   }
   
