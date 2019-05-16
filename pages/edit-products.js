@@ -33,8 +33,6 @@ import {
     }
   `;
 
-
-
   class EditProduct extends React.Component {
     state = {
       price: '',
@@ -53,7 +51,7 @@ import {
     }
   
     render() {
-      const { name, price, discount, variantId } = this.state;
+      const { name, price, futureValue, variantId } = this.state;
 
       const suffixStyles = {
         minWidth: '24px',
@@ -146,7 +144,7 @@ import {
                             onAction: () => {
                               const productVariableInput = {
                                 id: variantId,
-                                price: discount
+                                price: futureValue
                               };
                               handleSubmit({
                                 variables: { input: productVariableInput },

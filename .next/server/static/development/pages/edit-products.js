@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -605,7 +605,7 @@ function (_React$Component) {
       var _this$state = this.state,
           name = _this$state.name,
           price = _this$state.price,
-          discount = _this$state.discount,
+          futureValue = _this$state.futureValue,
           variantId = _this$state.variantId;
       var suffixStyles = {
         minWidth: '24px',
@@ -685,7 +685,7 @@ function (_React$Component) {
             onAction: function onAction() {
               var productVariableInput = {
                 id: variantId,
-                price: discount
+                price: futureValue
               };
               handleSubmit({
                 variables: {
@@ -709,7 +709,7 @@ function (_React$Component) {
 
 /***/ }),
 
-/***/ 4:
+/***/ 3:
 /*!**************************************!*\
   !*** multi ./pages/edit-products.js ***!
   \**************************************/
