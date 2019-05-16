@@ -14,6 +14,10 @@ import {
   import gql from 'graphql-tag';
   import { Mutation } from 'react-apollo';
   import store from 'store-js';
+  import { Redirect } from '@shopify/app-bridge/actions';
+  import * as PropTypes from 'prop-types';
+
+  
   
   const UPDATE_PRICE = gql`
     mutation productVariantUpdate($input: ProductVariantInput!) {
@@ -49,6 +53,18 @@ import {
     componentDidMount() {
       this.itemToBeConsumed();
     }
+
+    static contextTypes = {
+        polaris: PropTypes.object,
+    };
+
+    redirectToProduct = () => {
+        const redirect = Redirect.create(this.context.polaris.appBridge);
+        redirect.dispatch(
+            Redirect.Action.APP,
+            '/',
+        );
+    };
   
     render() {
       const { name, price, futureValue, variantId } = this.state;
@@ -153,9 +169,12 @@ import {
                           },
                         ]}
                         secondaryActions={[
-                          {
-                            content: 'Remove discount'
-                          },
+                            {
+                            content: 'Back',
+                            onAction: () => {
+                                this.redirectToProduct()
+                            },
+                            },
                         ]}
                       />
                     </Form>
